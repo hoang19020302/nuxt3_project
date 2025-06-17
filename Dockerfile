@@ -6,6 +6,7 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 RUN npm run build
+RUN rm env_config.js
 
 # Stage 2: Nginx server
 FROM nginx:alpine
