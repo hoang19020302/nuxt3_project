@@ -54,7 +54,7 @@ pipeline {
                         ls -l ./tmp_env/env_config.js
                         
                         docker run \
-                            -v $(pwd)/tmp_env/env_config.js:/tmp/env_config.js:ro \
+                            -v $(pwd)/tmp_env:/tmp_env:ro \
                             -d --name $CONTAINER_NAME \
                             -p $PORT:3000 $IMAGE_NAME:$IMAGE_TAG
 
