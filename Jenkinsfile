@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'docker-agent-test'
+        label 'docker-agent'
     }
 
     environment {
@@ -48,7 +48,7 @@ pipeline {
                     sh '''
                         cp "$ENV_PROD_CONTENT" /tmp/env_config.js
                         chmod 644 /tmp/env_config.js
-                        docker run -v /tmp:/tmp -d --name $CONTAINER_NAME -p $PORT:3000 $IMAGE_NAME:$IMAGE_TAG
+                        docker run -v /tmp/env_config.js:/tmp/env_config.js -d --name $CONTAINER_NAME -p $PORT:3000 $IMAGE_NAME:$IMAGE_TAG
                         docker ps -a
                     '''
                 }
