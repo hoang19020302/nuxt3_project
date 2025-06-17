@@ -54,7 +54,7 @@ pipeline {
                         
                         echo "[DEBUG] Copy env_config.js vào container..."
                         docker cp ./tmp_env/env_config.js $CONTAINER_NAME:/usr/share/nginx/html/env_config.js 
-                        docker exec $CONTAINER_NAME which env_config.js 
+                        docker exec $CONTAINER_NAME ls -l /usr/share/nginx/html
                         docker ps -a
                     '''
                 }
