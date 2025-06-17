@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'docker-agent'
+        label 'docker-agent-test'
     }
 
     environment {
@@ -18,15 +18,6 @@ pipeline {
                     credentialsId: 'git-ssh'
             }
         }
-
-        stage('Generate env_config.js') {
-            steps {
-                withCredentials([file(credentialsId: 'MANGA_FE_ENV_PROD', variable: 'ENV_PROD_CONTENT')]) {
-                    sh 'cp "$ENV_PROD_CONTENT" env_config.js'
-                }
-            }
-        }
-
 
         stage('Test User') {
            steps {
@@ -53,15 +44,14 @@ pipeline {
 
         stage('Run Container') {
             steps {
-                sh 'chmod 644 env_config.js'
-                sh 'ls -l env_config.js'
-                sh '''
-                    echo "File info:"
-                    ls -l $(pwd)/env_config.js
-                    file $(pwd)/env_config.js
-                   '''
-                sh 'docker run -v $(pwd)/env_config.js:/tmp/env_config.js -d --name $CONTAINER_NAME -p $PORT:3000 $IMAGE_NAME:$IMAGE_TAG'
-                sh 'docker ps -a'
+                withCredentials([file(credentialsId: 'MANGA_FE_ENV_PROD', variable: 'ENV_PROD_CONTENT')]) {
+                    sh '''
+                        cp "$ENV_PROD_CONTENT" /tmp_env/env_config.js
+                        chmod 644 /tmp_env/env_config.js
+                        docker run -v /tmp_env/env_config.js:/tmp/env_config.js -d --name $CONTAINER_NAME -p $PORT:3000 $IMAGE_NAME:$IMAGE_TAG
+                        docker ps -a
+                    '''
+                }
             }
         }
 
