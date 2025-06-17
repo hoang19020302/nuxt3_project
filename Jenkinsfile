@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'docker-agent'
+        label 'docker-agent-test'
     }
 
     environment {
@@ -50,14 +50,11 @@ pipeline {
                         cp "$ENV_PROD_CONTENT" ./tmp_env/env_config.js
                         chmod 644 ./tmp_env/env_config.js
 
-                        echo "[DEBUG] Kiểm tra trước khi mount:"
-                        ls -l ./tmp_env/env_config.js
+                        docker run -d --name $CONTAINER_NAME -p $PORT:3000 $IMAGE_NAME:$IMAGE_TAG
                         
-                        docker run \
-                            -v $(pwd)/tmp_env:/tmp_env:ro \
-                            -d --name $CONTAINER_NAME \
-                            -p $PORT:3000 $IMAGE_NAME:$IMAGE_TAG
-
+                        echo "[DEBUG] Copy env_config.js vào container..."
+                        docker cp ./tmp_env/env_config.js $CONTAINER_NAME:/tmp_env/env_config.js 
+                       
                         docker ps -a
                     '''
                 }
