@@ -7,7 +7,7 @@ pipeline {
         IMAGE_NAME = "manga_image"
         CONTAINER_NAME = "manga_container"
         IMAGE_TAG = "${BUILD_NUMBER}"
-        PORT = "3000"
+        PORT = "80"
     }
 
     stages {
