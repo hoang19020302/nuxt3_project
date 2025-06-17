@@ -7,7 +7,7 @@ pipeline {
         IMAGE_NAME = "manga_image"
         CONTAINER_NAME = "manga_container"
         IMAGE_TAG = "${BUILD_NUMBER}"
-        PORT = "80"
+        PORT = "3000"
     }
 
     stages {
@@ -50,7 +50,7 @@ pipeline {
                         cp "$ENV_PROD_CONTENT" ./tmp_env/env_config.js
                         chmod 644 ./tmp_env/env_config.js
 
-                        docker run -d --name $CONTAINER_NAME -p $PORT:3000 $IMAGE_NAME:$IMAGE_TAG
+                        docker run -d --name $CONTAINER_NAME -p $PORT:80 $IMAGE_NAME:$IMAGE_TAG
                         
                         echo "[DEBUG] Copy env_config.js vào container..."
                         docker cp ./tmp_env/env_config.js $CONTAINER_NAME:/usr/share/nginx/html/env_config.js 
