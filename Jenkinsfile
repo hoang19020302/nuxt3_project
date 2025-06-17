@@ -53,8 +53,8 @@ pipeline {
                         docker run -d --name $CONTAINER_NAME -p $PORT:3000 $IMAGE_NAME:$IMAGE_TAG
                         
                         echo "[DEBUG] Copy env_config.js vào container..."
-                        docker cp ./tmp_env/env_config.js $CONTAINER_NAME:/tmp/env_config.js 
-                        docker exec $CONTAINER_NAME ls -l /tmp                       
+                        docker cp ./tmp_env/env_config.js $CONTAINER_NAME:/usr/share/nginx/html/env_config.js 
+                        docker exec $CONTAINER_NAME which env_config.js 
                         docker ps -a
                     '''
                 }
