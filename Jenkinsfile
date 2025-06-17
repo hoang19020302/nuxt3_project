@@ -53,6 +53,13 @@ pipeline {
 
         stage('Run Container') {
             steps {
+                sh 'chmod 644 env_config.js'
+                sh 'ls -l env_config.js'
+                sh '''
+                    echo "File info:"
+                    ls -l $(pwd)/env_config.js
+                    file $(pwd)/env_config.js
+                   '''
                 sh 'docker run -v $(pwd)/env_config.js:/tmp/env_config.js -d --name $CONTAINER_NAME -p $PORT:3000 $IMAGE_NAME:$IMAGE_TAG'
                 sh 'docker ps -a'
             }
