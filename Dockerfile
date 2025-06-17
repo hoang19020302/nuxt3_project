@@ -1,22 +1,31 @@
-# Stage 1: Build ứng dụng React
-FROM node:20 AS build
+# Stage 1: Build application
+FROM node:20-alpine AS build
+
+# Cài git nếu bạn clone submodule hoặc install private repo
+RUN apk add --no-cache git
 
 WORKDIR /app
+
+# Copy package và cài đặt dependency
 COPY package*.json ./
 RUN npm install
+
+# Copy toàn bộ source
 COPY . .
+
+# Build SSR app
 RUN npm run build
-RUN rm env_config.js
 
-# Stage 2: Nginx server
-FROM nginx:alpine
+# Stage 2: Run with Nitro server (no nginx)
+FROM node:20-alpine AS runner
 
-COPY --from=build /app/.output/public /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app
 
-# Add entrypoint to generate env_config.js dynamically
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Copy output từ bước build
+COPY --from=build /app/.output .output
 
-EXPOSE 80
-ENTRYPOINT ["/entrypoint.sh"]
+# Port Nuxt SSR mặc định là 3000
+EXPOSE 3000
+
+# Khởi chạy ứng dụng Nuxt SSR
+CMD ["node", ".output/server/index.mjs"]

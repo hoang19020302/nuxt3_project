@@ -19,14 +19,6 @@ pipeline {
             }
         }
 
-        stage('Test User') {
-           steps {
-               sh 'whoami'
-               sh 'id'
-               sh 'groups'
-           }
-        }
-
         stage('Build Docker Image') {
             steps {
                  sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
@@ -50,12 +42,11 @@ pipeline {
                         cp "$ENV_PROD_CONTENT" ./tmp_env/env_config.js
                         chmod 644 ./tmp_env/env_config.js
 
-                        docker run -d --name $CONTAINER_NAME -p $PORT:80 $IMAGE_NAME:$IMAGE_TAG
+                        docker run -d --name $CONTAINER_NAME -p $PORT:3000 $IMAGE_NAME:$IMAGE_TAG
                         
-                        echo "[DEBUG] Copy env_config.js vào container..."
-                        docker cp ./tmp_env/env_config.js $CONTAINER_NAME:/usr/share/nginx/html/env_config.js 
-                        docker exec $CONTAINER_NAME ls -l /usr/share/nginx/html
+                        docker cp ./tmp_env/env_config.js $CONTAINER_NAME:/app/.output/server/env_config.js 
                         docker ps -a
+                        docker logs $CONTAINER_NAME --tail 30
                     '''
                 }
             }
