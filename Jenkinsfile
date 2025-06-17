@@ -46,6 +46,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'MANGA_FE_ENV_PROD', variable: 'ENV_PROD_CONTENT')]) {
                     sh '''
+                        mkdir -p tmp_env
                         cp "$ENV_PROD_CONTENT" /tmp_env/env_config.js
                         chmod 644 /tmp_env/env_config.js
                         docker run -v /tmp_env/env_config.js:/tmp/env_config.js -d --name $CONTAINER_NAME -p $PORT:3000 $IMAGE_NAME:$IMAGE_TAG
