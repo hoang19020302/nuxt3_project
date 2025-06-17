@@ -19,6 +19,15 @@ pipeline {
             }
         }
 
+        stage('Generate env_config.js') {
+            steps {
+                withCredentials([file(credentialsId: 'MANGA_FE_ENV_PROD', variable: 'ENV_PROD_CONTENT')]) {
+                    sh 'cp "$ENV_PROD_CONTENT" env_config.js'
+                }
+            }
+        }
+
+
         stage('Test User') {
            steps {
                sh 'whoami'
