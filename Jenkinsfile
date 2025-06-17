@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'git@github.com:Yongpipi/codename.git',
+                git url: 'git@github.com:hoang19020302/nuxt3_project.git',
                     branch: 'main',
                     credentialsId: 'git-ssh'
             }
