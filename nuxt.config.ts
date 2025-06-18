@@ -5,6 +5,9 @@ export default defineNuxtConfig({
   app: {
     baseURL: '/', // hoặc '/ten-thu-muc/' nếu deploy dưới subpath
   },
+  nitro: {
+    preset: 'static'
+  },
   devtools: { enabled: true },
   modules: ["@nuxtjs/tailwindcss", "nuxt-icon"],
 
