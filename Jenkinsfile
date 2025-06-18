@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'docker-agent'
+        label 'docker-agent-test'
     }
 
     environment {
@@ -47,6 +47,8 @@ pipeline {
                         docker cp ./tmp_env/env_config.js $CONTAINER_NAME:/usr/share/nginx/html/env_config.js 
                         docker ps -a
                         docker logs $CONTAINER_NAME
+                        pwd
+                        rm -rf ./tmp_env
                     '''
                 }
             }
