@@ -359,8 +359,8 @@ const username = ref({
 
 // Hàm kiểm tra người dùng đã đăng nhập hay chưa
 async function checkLoggedIn() {
-  const token = localStorage.getItem('token');
-  console.log(token);
+  const { get, set, remove } = useToken()
+  const token = get();
   if (token) {
     isLoggedIn.value = true;
     try {
@@ -382,7 +382,8 @@ async function checkLoggedIn() {
 // Hàm đăng xuất
 const logout = async () => {
   try {
-    localStorage.removeItem('token');
+    const { remove } = useToken()
+    remove(); // Xóa token khỏi localStorage
     isLoggedIn.value = false;
     window.location.href = "/login"; // Điều hướng đến trang login
     // window.location.reload(); // Làm mới trang sau khi điều hướng

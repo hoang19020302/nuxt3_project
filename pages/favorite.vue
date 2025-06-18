@@ -30,6 +30,8 @@ import { useHead } from '@vueuse/head';
 useHead({ title: 'Home Page', });
 const route = useRoute();
 const router = useRouter();
+const { get: getHistory, set: setHistory, remove: removeHistory } = useHistory();
+const { get: getToken, set: setToken, remove: removeToken } = useToken();
 
 const isLoggedIn = () => {
     // Thực hiện logic kiểm tra ở đây và trả về kiểu boolean
@@ -95,7 +97,7 @@ const history = ref([
 
 // Lấy danh sách lịch sử đọc từ localStorage khi trang được load
 if (typeof localStorage !== 'undefined') {
-    const historyString = localStorage.getItem('history');
+    const historyString = getHistory();
     history.value = historyString ? JSON.parse(historyString) : [];
 } else {
     // Trường hợp localStorage không tồn tại (ví dụ: SSR), gán giá trị mặc định cho history
@@ -104,7 +106,7 @@ if (typeof localStorage !== 'undefined') {
 
 const saveHistoryToLocalStorage = () => {
     if (typeof localStorage !== 'undefined' && isLoggedIn()) {
-        localStorage.setItem('history', JSON.stringify(history.value));
+        setHistory(JSON.stringify(history.value));
         return true;
     }
     return false;
@@ -145,7 +147,7 @@ const storiess = ref<Story[]>([]);
 
 
 async function fetchStory() {
-    const token = localStorage.getItem('token');
+    const token = getToken();
 
     try {
         const response = await axios.get(`${env_config.ADMIN}/Auth/GetAllStories`, {

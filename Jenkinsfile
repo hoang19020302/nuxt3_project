@@ -21,7 +21,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                 sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
+                 sh 'docker build -f Dockerfile.csr -t $IMAGE_NAME:$IMAGE_TAG .'
                  sh 'docker tag $IMAGE_NAME:$IMAGE_TAG $IMAGE_NAME:latest'
             }
         }
@@ -42,11 +42,12 @@ pipeline {
                         cp "$ENV_PROD_CONTENT" ./tmp_env/env_config.js
                         chmod 644 ./tmp_env/env_config.js
 
-                        docker run -d --name $CONTAINER_NAME -p $PORT:3000 $IMAGE_NAME:$IMAGE_TAG
+                        docker run -d --name $CONTAINER_NAME -p $PORT:80 $IMAGE_NAME:$IMAGE_TAG
                         
-                        docker cp ./tmp_env/env_config.js $CONTAINER_NAME:/app/.output/server/env_config.js 
+                        docker cp ./tmp_env/env_config.js $CONTAINER_NAME:/usr/share/nginx/html/env_config.js 
                         docker ps -a
-                        docker logs $CONTAINER_NAME --tail 30
+                        docker logs $CONTAINER_NAME
+                        rm -rf ./tmp_env
                     '''
                 }
             }

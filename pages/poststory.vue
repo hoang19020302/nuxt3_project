@@ -23,6 +23,7 @@ import { useHead } from '@vueuse/head';
 
 useHead({ title: 'Post Story' });
 const router = useRouter();
+const { get: getToken } = useToken(); // Assuming you have a useToken composable
 
 const poststories = ref({
   data: {
@@ -55,7 +56,7 @@ const poststory = async () => {
     return;
   }
 
-  const token = localStorage.getItem('token');
+  const token = getToken();
   const formData = new FormData();
   formData.append('Title', poststories.value.data.title);
   formData.append('Description', poststories.value.data.description);

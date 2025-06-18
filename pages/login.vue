@@ -69,6 +69,7 @@ import { useHead } from '@vueuse/head';
 
 useHead({ title: 'Login', });
 const isLogin = ref(true);
+const { get: getToken, set: setToken, remove: removeToken } = useToken();
 
 const login_model = ref({
     username: "",
@@ -78,7 +79,7 @@ const login_model = ref({
 
 axios.defaults.baseURL = env_config.ADMIN; // Cấu hình baseURL
 axios.interceptors.request.use((config) => {
-    const token = localStorage.getItem("token");
+    const token = getToken();
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -92,7 +93,7 @@ const login = async () => {
 
         if (response.data?.token) {
             console.log("Token received:", response.data.token); // Debug token
-            localStorage.setItem("token", response.data.token); // Lưu token
+            setToken(response.data.token); // Lưu token
             navigateTo('/'); // Điều hướng về trang chính
         } else {
             alert("Login failed. No token returned.");
@@ -116,7 +117,7 @@ const register_model = ref({
 const register = async () => {
     try {
         const response = await axios.post(`${env_config.ADMIN}/Auth/Register`, register_model.value)
-        localStorage.setItem("token", response.data)
+        setToken(response.data)
         console.log(response.data);
         // Reload trang
         window.location.reload();

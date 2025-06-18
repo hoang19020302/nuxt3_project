@@ -63,8 +63,10 @@ const userProfile = ref({
 
 );
 
+
 onMounted(async () => {
-  const token = localStorage.getItem('token');
+  const { get: getToken } = useToken();
+  const token = getToken();
   try {
     const response = await axios.get(`${env_config.ADMIN}/Auth/GetUser`, {
       headers: {

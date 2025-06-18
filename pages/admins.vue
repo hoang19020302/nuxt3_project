@@ -166,9 +166,10 @@ const categories = ref([
 ]);
 const isLoggedIn = ref(false);
 const isAdmin = ref(false);
+const { get, set, remove } = useToken()
 
 onMounted(async () => {
-    const token = localStorage.getItem('token');
+    const token = get();
     if (token) {
         isLoggedIn.value = true;
         try {
@@ -190,8 +191,13 @@ onMounted(async () => {
 
 async function fetchStories() {
     try {
+        const token = get();
+        if (!token) {
+            console.error('No token found');
+            return;
+        }
         const response = await axios.get(`${env_config.ADMIN}/story`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: { Authorization: `Bearer ${token}` },
         });
         stories.value = response.data.data.items;
     } catch (error) {
@@ -201,8 +207,13 @@ async function fetchStories() {
 
 async function fetchRankings() {
     try {
+        const token = get();
+        if (!token) {
+            console.error('No token found');
+            return;
+        }
         const response = await axios.get(`${env_config.ADMIN}/story/BangXepHang`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: { Authorization: `Bearer ${token}` },
         });
         rankings.value = response.data.items;
     } catch (error) {
@@ -212,8 +223,13 @@ async function fetchRankings() {
 
 async function fetchCategories() {
     try {
+        const token = get();
+        if (!token) {
+            console.error('No token found');
+            return;
+        }
         const response = await axios.get(`${env_config.ADMIN}/categories`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: { Authorization: `Bearer ${token}` },
         });
         categories.value = response.data;
     } catch (error) {
@@ -231,8 +247,13 @@ function openEditStoryModal(story) {
 
 async function deleteStory(id) {
     try {
+        const token = get();
+        if (!token) {
+            console.error('No token found');
+            return;
+        }
         await axios.delete(`${env_config.ADMIN}/story/${id}`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: { Authorization: `Bearer ${token}` },
         });
         stories.value = stories.value.filter((story) => story.id !== id);
     } catch (error) {
@@ -250,8 +271,13 @@ function openEditRankingModal(ranking) {
 
 async function deleteRanking(id) {
     try {
+        const token = get();
+        if (!token) {
+            console.error('No token found');
+            return;
+        }
         await axios.delete(`${env_config.ADMIN}/story/BangXepHang/${id}`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: { Authorization: `Bearer ${token}` },
         });
         rankings.value = rankings.value.filter((ranking) => ranking.id !== id);
     } catch (error) {
@@ -269,8 +295,13 @@ function openEditCategoryModal(category) {
 
 async function deleteCategory(id) {
     try {
+        const token = get();
+        if (!token) {
+            console.error('No token found');
+            return;
+        }
         await axios.delete(`${env_config.ADMIN}/categories/${id}`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+            headers: { Authorization: `Bearer ${token}` },
         });
         categories.value = categories.value.filter((category) => category.id !== id);
     } catch (error) {

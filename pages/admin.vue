@@ -104,7 +104,8 @@ const UsersandRoles = ref({
 const stories = ref<Story[]>([]);
 
 onMounted(async () => {
-  const token = localStorage.getItem('token');
+  const { get } = useToken()
+  const token = get();
   try {
     const response = await axios.get(`${env_config.ADMIN}/Auth/GetUser`, {
       headers: {
